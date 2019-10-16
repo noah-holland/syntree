@@ -207,7 +207,7 @@ $(function() {
 		loc = loc.replace(window.location.search, "");
 
 		window.prompt ("Link for this tree:", loc + "?i=" +
-			encodeURIComponent(editor.getValue()));
+			encodeURIComponent(ace.edit("i").getValue()));
 		return false;
 	});
 	$("#font-size-slider").bind("slide", function (event, ui) {
