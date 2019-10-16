@@ -22,7 +22,14 @@
 	<a href="https://github.com/mshang/syntree"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
 	<div id="accordion">
 		<h3><a href="#">Syntax Tree Generator</a></h3><div style="text-align:left">
-			<textarea id="i" rows="4">[S [NP This] [VP [V is] [^NP a wug]]]</textarea>
+			<textarea id="i" rows="20">S:
+  NP:
+    N: Noah
+  VP:
+    V: kicked
+    NP:
+      D: the
+      N: ball.</textarea>
 			(C) 2011 by <a href="http://mshang.ca/">Miles Shang</a>, see <a href="LICENSE.txt">license</a>.
 		</div>
 
@@ -89,7 +96,7 @@
 
 <style type="text/css">
 body { font-size: small !important; font-family: sans-serif; margin: 20px; background-color: #ffffff}
-#accordion { margin: 0px auto; width: 500px; text-align: center; }
+#accordion { margin: 0px auto; width: 1000px; text-align: center; }
 table { margin: 0px auto; }
 //.ui-widget { font-size:small !important; }
 td {font-size:small !important;}
@@ -106,6 +113,7 @@ img { border: 1px solid #bbbbbb; }
 <script type="text/javascript" src="js/jquery-ui-1.8.18.custom.min.js"></script>
 <script type="text/javascript" src="js/base64.js"></script>
 <script type="text/javascript" src="js/canvas2image.js"></script>
+<script type="text/javascript" src="js/js-yaml.js"></script>
 <script type="text/javascript" src="js/syntree.js"></script>
 <script type="text/javascript">
 
