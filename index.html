@@ -39,6 +39,11 @@
 				<col width="1*">
 				<tr>
 					<td colspan="2" align="center"><div id="font-style-radio" class="nobr">
+						<input type="checkbox" id="showInvisibles" checked="true" class="redraw" /><label for="showInvisibles">Show Invisibles</label>
+					</div></td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center"><div id="font-style-radio" class="nobr">
 						<input type="radio" name="font-style" id="serif" value="serif" class="redraw" /><label for="serif">Serif</label>
 						<input type="radio" name="font-style" id="sans-serif" value="sans-serif" class="redraw" checked /><label for="sans-serif">Sans-Serif</label>
 						<input type="radio" name="font-style" id="monospace" value="monospace" class="redraw" /><label for="monospace">Monospace</label>
@@ -125,7 +130,7 @@ try {
 	editor.session.setMode("ace/mode/yaml");
 	editor.setShowPrintMargin(false);
 	editor.session.setTabSize(2);
-	editor.setShowInvisibles(true);
+	editor.setShowInvisibles(document.getElementById("showInvisibles").checked);
 	editor.setShowPrintMargin(false);
 
 	// Initialize the various options.
