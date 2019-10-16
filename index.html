@@ -38,6 +38,12 @@
 				<col width="1*">
 				<col width="1*">
 				<tr>
+					<td colspan="2" align="center"><div id="input-style-radio" class="nobr">
+						<input type="radio" name="input-style" id="input-standard" class="redraw" /><label for="input-standard">Standard</label>
+						<input type="radio" name="input-style" id="input-yaml" class="redraw" checked /><label for="input-yaml">YAML</label>
+					</div></td>
+				</tr>
+				<tr>
 					<td colspan="2" align="center"><div id="font-style-radio" class="nobr">
 						<input type="checkbox" id="showInvisibles" checked="true" class="redraw" /><label for="showInvisibles">Show Invisibles</label>
 					</div></td>
@@ -163,11 +169,11 @@ try {
 
 	// Get the string.
 	var str = editor.getValue();
-
+	var use_yaml = document.getElementById("input-yaml").checked;
 	/*$("#image-goes-here").text(str + ", " + font_size + ", " +
 		term_font + ", " + nonterm_font + ", " + vert_space + ", " + hor_space);*/
 
-	var img = go(str, font_size, term_font, nonterm_font, vert_space, hor_space, color, term_lines);
+	var img = go(str, use_yaml, font_size, term_font, nonterm_font, vert_space, hor_space, color, term_lines);
 	$("#image-goes-here").empty();
 	$("#image-goes-here").append(img);
 
@@ -188,7 +194,7 @@ $(function() {
 	$("#font-size-slider").slider({value: 12, min: 8, max: 16, step: 1});
 	$("#vert-space-slider").slider({value: 35, min: 35, max: 70, step: 5});
 	$("#hor-space-slider").slider({value: 10, min: 10, max: 50, step: 5});
-	$("#font-style-radio, #term-font-check, #nonterm-font-check").buttonset();
+	$("#font-style-radio, #term-font-check, #nonterm-font-check, #input-style-radio").buttonset();
 	$("#accordion").accordion({collapsible: true, icons: false, autoHeight: false});
 
 	try {

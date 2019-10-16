@@ -289,24 +289,30 @@ MovementLine.prototype.draw = function(ctx) {
 	ctx.fill();
 }
 
-function go(str, font_size, term_font, nonterm_font, vert_space, hor_space, color, term_lines) {
-	// Clean up the string
-	str = str.replace(/^\s+/, "");
-	var open = 0;
-	for (var i = 0; i < str.length; i++) {
-		if (str[i] == "[") open++;
-		if (str[i] == "]") open--;
-	}
-	while (open < 0) {
-		str = "[" + str;
-		open++;
-	}
-	while (open > 0) {
-		str = str + "]";
-		open--;
-	}
+function go(str, yaml, font_size, term_font, nonterm_font, vert_space, hor_space, color, term_lines) {
+	var root;
 
-	var root = parse(jsyaml.load(str), null);
+	if(yaml) {
+		root = parse_yaml(jsyaml.load(str), null);
+	} else {
+		// Clean up the string
+		str = str.replace(/^\s+/, "");
+		var open = 0;
+		for (var i = 0; i < str.length; i++) {
+			if (str[i] == "[") open++;
+			if (str[i] == "]") open--;
+		}
+		while (open < 0) {
+			str = "[" + str;
+			open++;
+		}
+		while (open > 0) {
+			str = str + "]";
+			open--;
+		}
+
+		root = parse(str);
+	}
 	root.set_siblings(null);
 	root.check_triangle();
 
@@ -380,74 +386,74 @@ function subscriptify(in_str) {
 	return out_str;
 }
 
-// function parse(str) {
-// 	var n = new Node();
-//
-// 	if (str[0] != "[") { // Text node
-// 		// Get any movement information.
-// 		// Make sure to collapse any spaces around <X> to one space, even if there is no space.
-// 		str = str.replace(/\s*<(\w+)>\s*/,
-// 			function(match, tail) {
-// 				n.tail = tail;
-// 				return " ";
-// 			});
-// 		str = str.replace(/^\s+/, "");
-// 		str = str.replace(/\s+$/, "");
-// 		n.value = str;
-// 		return n;
-// 	}
-//
-// 	var i = 1;
-// 	while ((str[i] != " ") && (str[i] != "[") && (str[i] != "]")) i++;
-// 	n.value = str.substr(1, i-1)
-// 	n.value = n.value.replace(/\^/,
-// 		function () {
-// 			n.starred = true;
-// 			return "";
-// 		});
-// 	n.value = n.value.replace(/_(\w+)$/,
-// 		function(match, label) {
-// 			n.label = label;
-// 			if (n.label.search(/^\d+$/) != -1)
-// 				return subscriptify(n.label);
-// 			return "";
-// 		});
-//
-// 	while (str[i] == " ") i++;
-// 	if (str[i] != "]") {
-// 		var level = 1;
-// 		var start = i;
-// 		for (; i < str.length; i++) {
-// 			var temp = level;
-// 			if (str[i] == "[") level++;
-// 			if (str[i] == "]") level--;
-// 			if (((temp == 1) && (level == 2)) || ((temp == 1) && (level == 0))) {
-// 				if (str.substring(start, i).search(/[^\s]/) > -1)
-// 					n.children.push(parse(str.substring(start, i)));
-// 				start = i;
-// 			}
-// 			if ((temp == 2) && (level == 1)) {
-// 				n.children.push(parse(str.substring(start, i+1)));
-// 				start = i+1;
-// 			}
-// 		}
-// 	}
-// 	return n;
-// }
+function parse(str) {
+	var n = new Node();
+
+	if (str[0] != "[") { // Text node
+		// Get any movement information.
+		// Make sure to collapse any spaces around <X> to one space, even if there is no space.
+		str = str.replace(/\s*<(\w+)>\s*/,
+			function(match, tail) {
+				n.tail = tail;
+				return " ";
+			});
+		str = str.replace(/^\s+/, "");
+		str = str.replace(/\s+$/, "");
+		n.value = str;
+		return n;
+	}
+
+	var i = 1;
+	while ((str[i] != " ") && (str[i] != "[") && (str[i] != "]")) i++;
+	n.value = str.substr(1, i-1)
+	n.value = n.value.replace(/\^/,
+		function () {
+			n.starred = true;
+			return "";
+		});
+	n.value = n.value.replace(/_(\w+)$/,
+		function(match, label) {
+			n.label = label;
+			if (n.label.search(/^\d+$/) != -1)
+				return subscriptify(n.label);
+			return "";
+		});
+
+	while (str[i] == " ") i++;
+	if (str[i] != "]") {
+		var level = 1;
+		var start = i;
+		for (; i < str.length; i++) {
+			var temp = level;
+			if (str[i] == "[") level++;
+			if (str[i] == "]") level--;
+			if (((temp == 1) && (level == 2)) || ((temp == 1) && (level == 0))) {
+				if (str.substring(start, i).search(/[^\s]/) > -1)
+					n.children.push(parse(str.substring(start, i)));
+				start = i;
+			}
+			if ((temp == 2) && (level == 1)) {
+				n.children.push(parse(str.substring(start, i+1)));
+				start = i+1;
+			}
+		}
+	}
+	return n;
+}
 
 
-function parse(yml, label) {
+function parse_yaml(yml, label) {
 
 	if(label == null) {
 		var key = Object.keys(yml)[0];
-		return parse(yml[key], key);
+		return parse_yaml(yml[key], key);
 	}
 
 	var n = new Node(label);
 
 	if (typeof yml === 'object') {
 		Object.keys(yml).forEach( key => {
-			n.children.push(parse(yml[key], key));
+			n.children.push(parse_yaml(yml[key], key));
 		})
 	} else {
 		var leaf = new Node(yml);
